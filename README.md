@@ -1,0 +1,1 @@
+# smp-proper-fitness-schedule
