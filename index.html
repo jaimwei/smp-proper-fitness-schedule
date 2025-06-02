@@ -487,15 +487,9 @@
                         onclick="switchTab('wellness')" 
                         role="tab" 
                         aria-selected="true" 
-                        aria-controls="wellness-content">
+                        aria-controls="wellness-content"
+                        style="width: 100%; border-right: none;">
                     WELLNESS CLASSES
-                </button>
-                <button class="nav-tab inactive" 
-                        onclick="switchTab('sports')" 
-                        role="tab" 
-                        aria-selected="false" 
-                        aria-controls="sports-content">
-                    TENNIS, PADEL & BEACH
                 </button>
             </div>
         </div>
@@ -533,7 +527,7 @@
                     {
                         day: 'WEDNESDAY',
                         classes: [
-                            { time: '7:30am - 8:30am', name: 'Proper Run Club', location: 'Paseo', rsvpUrl: null },
+                            { time: '7:30am - 8:30am', name: 'Proper Run Club', location: 'Paseo', rsvpUrl: 'https://www.eventbrite.com/e/proper-run-club-tickets-1364483429669?aff=oddtdtcreator' },
                             { time: '8:00am - 9:00am', name: 'Mat Pilates', location: 'Helios Studio', rsvpUrl: 'https://www.eventbrite.com/e/mat-pilates-tickets-1304652182799?aff=oddtdtcreator' },
                             { time: '10:00am - 11:00am', name: 'Yoga Sculpt', location: 'Helios Studio', rsvpUrl: 'https://www.eventbrite.com/e/yoga-sculpt-tickets-1350581308049?aff=oddtdtcreator' }
                         ]
@@ -562,7 +556,7 @@
                         day: 'SUNDAY',
                         classes: [
                             { time: '9:00am - 10:00am', name: 'Vinyasa Yoga', location: 'Helios Studio', rsvpUrl: 'https://www.eventbrite.com/e/vinyasa-yoga-tickets-1264416918039?aff=oddtdtcreator' },
-                            { time: '10:30am - 11:30am', name: 'Mat Pilates', location: 'Helios Studio', rsvpUrl: 'https://www.eventbrite.com/e/1388558910079/preview/' }
+                            { time: '10:30am - 11:30am', name: 'Mat Pilates', location: 'Helios Studio', rsvpUrl: 'https://www.eventbrite.com/e/mat-pilates-tickets-1264391090789?aff=oddtdtcreator' }
                         ]
                     }
                 ],
@@ -577,45 +571,6 @@
                     { title: 'WATER AEROBICS', text: 'Low-impact aquatic fitness providing full-body conditioning in the pool.' },
                     { title: 'GENTLE YOGA', text: 'Restorative practice focusing on relaxation and gentle movement.' },
                     { title: 'PILATES', text: 'Full-body conditioning emphasizing core strength, flexibility, and posture.' }
-                ]
-            },
-            sports: {
-                schedule: [
-                    {
-                        day: 'SUNDAY 6/1',
-                        classes: [
-                            { time: '11:00am - 12:00pm', name: 'Beach Tennis', location: 'Proper Club Members Only', rsvpUrl: null }
-                        ]
-                    },
-                    {
-                        day: 'SATURDAY 6/7',
-                        classes: [
-                            { time: '9:00am - 10:30am', name: 'Padel Fundamentals', location: 'Padel Court', rsvpUrl: null }
-                        ]
-                    },
-                    {
-                        day: 'SATURDAY 6/14',
-                        classes: [
-                            { time: '9:00am - 10:30am', name: 'Padel Fundamentals', location: 'Padel Court', rsvpUrl: null }
-                        ]
-                    },
-                    {
-                        day: 'SUNDAY 6/22',
-                        classes: [
-                            { time: '11:00am - 12:00pm', name: 'Beach Tennis', location: 'Beach Court', rsvpUrl: null }
-                        ]
-                    },
-                    {
-                        day: 'SUNDAY 7/14',
-                        classes: [
-                            { time: '9:00am - 10:30am', name: 'Beach Volleyball', location: 'Beach Court', rsvpUrl: null }
-                        ]
-                    }
-                ],
-                descriptions: [
-                    { title: 'BEACH TENNIS', text: 'Fast-paced racquet sport played on sand courts with specialized equipment.' },
-                    { title: 'PADEL FUNDAMENTALS', text: 'Learn padel basics with Abraham from PadelUp Century City.' },
-                    { title: 'BEACH VOLLEYBALL', text: 'Classic beach sport combining teamwork, athleticism, and fun on the sand.' }
                 ]
             }
         };
@@ -655,36 +610,19 @@
         }
 
         function switchTab(tabType) {
-            const tabs = document.querySelectorAll('.nav-tab');
+            // Only wellness tab exists now, but keeping function for consistency
             const scheduleContent = document.getElementById('schedule-content');
             
-            // Update tab states
-            tabs.forEach((tab, index) => {
-                tab.classList.remove('active');
-                tab.classList.add('inactive');
-                tab.setAttribute('aria-selected', 'false');
-            });
-            
             if (tabType === 'wellness') {
-                tabs[0].classList.add('active');
-                tabs[0].classList.remove('inactive');
-                tabs[0].setAttribute('aria-selected', 'true');
-                currentTab = 'wellness';
-            } else if (tabType === 'sports') {
-                tabs[1].classList.add('active');
-                tabs[1].classList.remove('inactive');
-                tabs[1].setAttribute('aria-selected', 'true');
-                currentTab = 'sports';
+                // Add loading state
+                scheduleContent.classList.add('loading');
+                
+                // Render content with slight delay for smooth transition
+                setTimeout(() => {
+                    renderSchedule(scheduleData.wellness);
+                    scheduleContent.classList.remove('loading');
+                }, 150);
             }
-
-            // Add loading state
-            scheduleContent.classList.add('loading');
-            
-            // Render new content with slight delay for smooth transition
-            setTimeout(() => {
-                renderSchedule(scheduleData[currentTab]);
-                scheduleContent.classList.remove('loading');
-            }, 150);
         }
 
         function handleReservation(rsvpUrl) {
@@ -699,7 +637,7 @@
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', function() {
-            renderSchedule(scheduleData[currentTab]);
+            renderSchedule(scheduleData.wellness);
         });
 
         // Add keyboard navigation support
@@ -708,16 +646,7 @@
                 // Let default tab behavior work
                 return;
             }
-            
-            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-                const activeTab = document.querySelector('.nav-tab.active');
-                if (activeTab === document.activeElement) {
-                    e.preventDefault();
-                    const newTab = currentTab === 'wellness' ? 'sports' : 'wellness';
-                    switchTab(newTab);
-                    document.querySelector('.nav-tab.active').focus();
-                }
-            }
+            // Removed arrow key navigation since there's only one tab now
         });
 
         // Add touch event optimization for mobile
@@ -730,23 +659,8 @@
 
         document.addEventListener('touchend', function(e) {
             touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
+            // Removed swipe functionality since there's only one tab now
         });
-
-        function handleSwipe() {
-            const swipeThreshold = 50;
-            const diff = touchStartX - touchEndX;
-            
-            if (Math.abs(diff) > swipeThreshold) {
-                if (diff > 0 && currentTab === 'wellness') {
-                    // Swipe left to sports
-                    switchTab('sports');
-                } else if (diff < 0 && currentTab === 'sports') {
-                    // Swipe right to wellness
-                    switchTab('wellness');
-                }
-            }
-        }
     </script>
 </body>
 </html>
