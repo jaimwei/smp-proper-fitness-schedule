@@ -877,7 +877,7 @@
         function handleReservation(rsvpUrl, className, day) {
             if (rsvpUrl && rsvpUrl.trim() !== '') {
                 // Open Eventbrite link in new tab
-                window.open(rsvpUrl, '_blank');
+                window.open(rsvpUrl, '_blank', 'noopener,noreferrer');
             } else {
                 // Fallback for classes without Eventbrite links
                 alert(`To reserve ${className} on ${day}, please contact:\n\nGuest Services: (310) 620-9990\nEmail: wellness@properhotel.com`);
